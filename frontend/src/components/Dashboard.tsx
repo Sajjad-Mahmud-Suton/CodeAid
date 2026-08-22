@@ -2,8 +2,21 @@ import React, { useState } from 'react';
 import Editor from '@monaco-editor/react';
 import ReactMarkdown from 'react-markdown';
 
+const defaultCodes: Record<string, string> = {
+  c: '// Write some C code here\n#include <stdio.h>\n\nint main() {\n  printf("Hello CodeAid!\\n");\n  return 0;\n}',
+  cpp: '// Write some C++ code here\n#include <iostream>\n\nint main() {\n  std::cout << "Hello CodeAid!\\n";\n  return 0;\n}',
+  python: '# Write some Python code here\nprint("Hello CodeAid!")'
+};
+
 const Dashboard = ({ token }: { token: string }) => {
-  const [code, setCode] = useState('// Write some C code here\n#include <stdio.h>\n\nint main() {\n  printf("Hello CodeAid!\\n");\n  return 0;\n}');
+  const [language, setLanguage] = useState('c');
+  const [code, setCode] = useState(defaultCodes['c']);
+  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const lang = e.target.value;
+    setLanguage(lang);
+    setCode(defaultCodes[lang]);
+  };
+
   const [question, setQuestion] = useState('');
   const [response, setResponse] = useState('');
   const [loading, setLoading] = useState(false);
@@ -21,7 +34,7 @@ const Dashboard = ({ token }: { token: string }) => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          language: 'c',
+          language: language,
           version: '*',
           files: [
             {
@@ -134,13 +147,20 @@ const Dashboard = ({ token }: { token: string }) => {
     <div className="dashboard-container">
       <div className="editor-section" style={{ display: 'flex', flexDirection: 'column' }}>
         <div className="section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h3>Code Editor</h3>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+            <h3>Code Editor</h3>
+            <select value={language} onChange={handleLanguageChange} style={{ padding: '4px', borderRadius: '4px', backgroundColor: '#333', color: 'white', border: '1px solid #555' }}>
+              <option value="c">C</option>
+              <option value="cpp">C++</option>
+              <option value="python">Python</option>
+            </select>
+          </div>
           <button onClick={handleRunCode} disabled={runLoading} style={{ padding: '5px 15px', backgroundColor: '#4caf50', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
             {runLoading ? 'Running...' : '▶ Run Code'}
           </button>
         </div>
         <div className="editor-wrapper" style={{ flex: 1, minHeight: '60%' }}>
-          <Editor height="100%" defaultLanguage="c" value={code} onChange={(v) => setCode(v || '')} theme="vs-dark" options={{ minimap: { enabled: false }, fontSize: 14 }} />
+          <Editor height="100%" language={language === 'cpp' ? 'cpp' : language} value={code} onChange={(v) => setCode(v || '')} theme="vs-dark" options={{ minimap: { enabled: false }, fontSize: 14 }} />
         </div>
         <div className="output-section" style={{ height: '30%', backgroundColor: '#1e1e1e', color: '#fff', padding: '10px', overflowY: 'auto', borderTop: '2px solid #333' }}>
           <h4 style={{ margin: '0 0 10px 0', color: '#aaa', fontSize: '14px' }}>Execution Output</h4>

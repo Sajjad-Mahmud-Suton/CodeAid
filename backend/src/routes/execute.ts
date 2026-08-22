@@ -8,7 +8,7 @@ const router = express.Router();
 router.post('/', (req, res) => {
   const { language, files } = req.body;
   
-  if (language !== 'c' || !files || files.length === 0) {
+  if (!['c', 'cpp', 'python'].includes(language) || !files || files.length === 0) {
     return res.status(400).json({ message: 'Unsupported language or invalid request.' });
   }
 
@@ -20,31 +20,43 @@ router.post('/', (req, res) => {
     fs.mkdirSync(tempDir);
   }
 
-  const srcFile = path.join(tempDir, `code_${id}.c`);
+  const fileExt = language === 'python' ? 'py' : language === 'cpp' ? 'cpp' : 'c';
+  const srcFile = path.join(tempDir, `code_${id}.${fileExt}`);
   const exeFile = path.join(tempDir, `code_${id}.exe`);
 
   fs.writeFileSync(srcFile, code);
 
-  exec(`gcc "${srcFile}" -o "${exeFile}"`, (compileError, stdout, stderr) => {
-    if (compileError) {
+  if (language === 'python') {
+    exec(`python "${srcFile}"`, { timeout: 5000 }, (runError, runStdout, runStderr) => {
       try { fs.unlinkSync(srcFile); } catch (e) {}
-      return res.json({ run: { output: stderr } });
-    }
-
-    exec(`"${exeFile}"`, { timeout: 5000 }, (runError, runStdout, runStderr) => {
-      // Cleanup files
-      try {
-        fs.unlinkSync(srcFile);
-        fs.unlinkSync(exeFile);
-      } catch (e) {}
-
       if (runError) {
         return res.json({ run: { output: runStderr || runError.message } });
       }
-
       res.json({ run: { output: runStdout } });
     });
-  });
+  } else {
+    const compiler = language === 'cpp' ? 'g++' : 'gcc';
+    exec(`${compiler} "${srcFile}" -o "${exeFile}"`, (compileError, stdout, stderr) => {
+      if (compileError) {
+        try { fs.unlinkSync(srcFile); } catch (e) {}
+        return res.json({ run: { output: stderr } });
+      }
+
+      exec(`"${exeFile}"`, { timeout: 5000 }, (runError, runStdout, runStderr) => {
+        // Cleanup files
+        try {
+          fs.unlinkSync(srcFile);
+          fs.unlinkSync(exeFile);
+        } catch (e) {}
+
+        if (runError) {
+          return res.json({ run: { output: runStderr || runError.message } });
+        }
+
+        res.json({ run: { output: runStdout } });
+      });
+    });
+  }
 });
 
 export default router;
