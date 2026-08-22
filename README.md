@@ -501,29 +501,30 @@ MONGODB_URI=your_mongodb_connection_string
 
 ---
 
-## 3️⃣ Start the Backend
+## 3️⃣ Run using the Batch File (Simplest Method)
 
-```bash
-cd backend
-npm install
-npm run dev
-```
-
-The Express server will start in development mode.
+If you are on Windows, simply double-click the **`START_PROJECT.bat`** file in the root directory. 
+It will automatically install all dependencies, open two command prompt windows for the backend and frontend, and start the project!
 
 ---
 
-## 4️⃣ Start the Frontend
+## 4️⃣ Run from Terminal (Manual Method)
 
-Open another terminal:
+If you prefer to run it manually from the terminal, follow these steps:
 
-```bash
-cd frontend
-npm install
-npm run dev
-```
+**Start the Backend:**
+1. Open a terminal in the root folder.
+2. Navigate to the backend folder: `cd backend`
+3. Install dependencies (first time only): `npm install`
+4. Start the server: `npm run dev`
 
-Vite will provide the local development URL in the terminal.
+**Start the Frontend:**
+1. Open a **second** new terminal in the root folder.
+2. Navigate to the frontend folder: `cd frontend`
+3. Install dependencies (first time only): `npm install`
+4. Start the frontend: `npm run dev`
+
+Vite will provide the local development URL (usually `http://localhost:5173`) in the terminal.
 
 ---
 

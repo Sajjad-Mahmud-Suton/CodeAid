@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Dashboard from './components/Dashboard';
 import Auth from './components/Auth';
 
@@ -18,7 +18,7 @@ function App() {
           <button className="btn-outline" onClick={() => setUser(null)}>Logout</button>
         </div>
       </header>
-      <Dashboard token={user.token} />
+      <Dashboard token={user.token} username={user.username} />
     </div>
   );
 }

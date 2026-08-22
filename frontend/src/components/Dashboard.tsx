@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import type { ChangeEvent } from 'react';
 import Editor from '@monaco-editor/react';
 import ReactMarkdown from 'react-markdown';
+import { db } from '../firebase';
+import { collection, addDoc, serverTimestamp, getDocs, query, where } from 'firebase/firestore';
 
 const defaultCodes: Record<string, string> = {
   c: '// Write some C code here\n#include <stdio.h>\n\nint main() {\n  printf("Hello CodeAid!\\n");\n  return 0;\n}',
@@ -8,10 +11,10 @@ const defaultCodes: Record<string, string> = {
   python: '# Write some Python code here\nprint("Hello CodeAid!")'
 };
 
-const Dashboard = ({ token }: { token: string }) => {
+const Dashboard = ({ token, username }: { token: string, username?: string }) => {
   const [language, setLanguage] = useState('c');
   const [code, setCode] = useState(defaultCodes['c']);
-  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleLanguageChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const lang = e.target.value;
     setLanguage(lang);
     setCode(defaultCodes[lang]);
@@ -23,10 +26,52 @@ const Dashboard = ({ token }: { token: string }) => {
   const [feature, setFeature] = useState('general');
   const [runLoading, setRunLoading] = useState(false);
   const [runOutput, setRunOutput] = useState('');
+  const [stats, setStats] = useState<{ runs: number, queries: number } | null>(null);
+  const [showStats, setShowStats] = useState(false);
+
+  const logActivity = async (actionType: string) => {
+    try {
+      if (username) {
+        await addDoc(collection(db, "activities"), {
+          username,
+          actionType,
+          timestamp: serverTimestamp()
+        });
+      }
+    } catch (e: any) { 
+      console.error("Firebase AddDoc Error:", e);
+    }
+  };
+
+  const fetchStats = async () => {
+    if (!username) {
+      alert("Username is missing!");
+      return;
+    }
+    try {
+      const q = query(collection(db, "activities"), where("username", "==", username));
+      const querySnapshot = await getDocs(q);
+      let runs = 0;
+      let queries = 0;
+      querySnapshot.forEach((doc) => {
+        if (doc.data().actionType === 'run_code') runs++;
+        if (doc.data().actionType === 'ask_ai') queries++;
+      });
+      setStats({ runs, queries });
+      setShowStats(true);
+    } catch (e: any) { 
+      console.error("Firebase GetDocs Error:", e);
+      alert("Error fetching stats: " + e.message + "\n\n(If it says Missing or insufficient permissions, you need to update Firebase Firestore Rules to allow read/write.)");
+      // Show it anyway with 0 so the modal opens
+      setStats({ runs: 0, queries: 0 });
+      setShowStats(true);
+    }
+  };
 
   const handleRunCode = async () => {
     setRunLoading(true);
     setRunOutput('');
+    logActivity('run_code');
     try {
       const res = await fetch('http://localhost:5000/api/execute', {
         method: 'POST',
@@ -60,6 +105,7 @@ const Dashboard = ({ token }: { token: string }) => {
   const handleSubmit = async () => {
     setLoading(true);
     setResponse('');
+    logActivity('ask_ai');
     
     try {
       const payload: any = {};
@@ -155,9 +201,14 @@ const Dashboard = ({ token }: { token: string }) => {
               <option value="python">Python</option>
             </select>
           </div>
-          <button onClick={handleRunCode} disabled={runLoading} style={{ padding: '5px 15px', backgroundColor: '#4caf50', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
-            {runLoading ? 'Running...' : '▶ Run Code'}
-          </button>
+          <div>
+            <button onClick={fetchStats} style={{ marginRight: '10px', padding: '5px 15px', backgroundColor: '#3498db', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+              📊 My Progress
+            </button>
+            <button onClick={handleRunCode} disabled={runLoading} style={{ padding: '5px 15px', backgroundColor: '#4caf50', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+              {runLoading ? 'Running...' : '▶ Run Code'}
+            </button>
+          </div>
         </div>
         <div className="editor-wrapper" style={{ flex: 1, minHeight: '60%' }}>
           <Editor height="100%" language={language === 'cpp' ? 'cpp' : language} value={code} onChange={(v) => setCode(v || '')} theme="vs-dark" options={{ minimap: { enabled: false }, fontSize: 14 }} />
@@ -167,6 +218,14 @@ const Dashboard = ({ token }: { token: string }) => {
           <pre style={{ margin: 0, whiteSpace: 'pre-wrap', fontFamily: 'monospace', fontSize: '14px', color: runOutput.toLowerCase().includes('error') ? '#f44336' : '#fff' }}>
             {runOutput || 'Code output will appear here...'}
           </pre>
+          {(runOutput.toLowerCase().includes('error') || runOutput.toLowerCase().includes('failed')) && (
+            <button onClick={() => {
+              setFeature('help-fix-code');
+              setQuestion('I got this error when running my code:\n' + runOutput + '\n\nHow do I fix it?');
+            }} style={{ marginTop: '10px', padding: '8px 15px', backgroundColor: '#e74c3c', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>
+              🤖 Explain this Error
+            </button>
+          )}
         </div>
       </div>
       
@@ -208,6 +267,22 @@ const Dashboard = ({ token }: { token: string }) => {
           )}
         </div>
       </div>
+
+      {showStats && stats && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
+          <div style={{ backgroundColor: '#1e1e1e', padding: '30px', borderRadius: '10px', minWidth: '300px', color: 'white' }}>
+            <h2 style={{ marginTop: 0, color: '#3498db' }}>Student Progress</h2>
+            <hr style={{ borderColor: '#333' }} />
+            <div style={{ margin: '20px 0', fontSize: '1.2em' }}>
+              <p>💻 Codes Executed: <strong style={{ color: '#4caf50' }}>{stats.runs}</strong></p>
+              <p>🤖 AI Consultations: <strong style={{ color: '#9b59b6' }}>{stats.queries}</strong></p>
+            </div>
+            <button onClick={() => setShowStats(false)} style={{ width: '100%', padding: '10px', backgroundColor: '#e74c3c', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

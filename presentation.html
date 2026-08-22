@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeAid - ML Lab Presentation</title>
+    <!-- Reveal.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+    <!-- Google Fonts for Modern Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Global & Background */
+        body {
+            background: #ffffff; /* Clean white background */
+            font-family: 'Poppins', sans-serif;
+            color: #2c3e50;
+        }
+        
+        .reveal {
+            font-family: 'Poppins', sans-serif;
+            color: #2c3e50;
+            font-size: 42px; /* Much larger base font size */
+        }
+
+        /* Typography */
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+            font-family: 'Poppins', sans-serif;
+            text-transform: none;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        
+        .reveal h2 {
+            color: #2980b9;
+            font-size: 2.2em; /* Bigger headers */
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .reveal h3 {
+            color: #e74c3c;
+            font-size: 1.6em;
+        }
+
+        /* Highlight Colors */
+        .highlight-blue { color: #3498db; font-weight: 600; }
+        .highlight-green { color: #2ecc71; font-weight: 600; }
+        .highlight-red { color: #e74c3c; font-weight: 600; }
+
+        /* Formatting Helpers */
+        .text-left { text-align: left; }
+        .text-center { text-align: center; }
+        
+        /* Layouts & Components */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            width: 100%;
+        }
+
+        .flex-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+            width: 100%;
+        }
+
+        .content-focus {
+            flex: 2.5; 
+            text-align: left;
+        }
+        .image-side {
+            flex: 1.5; 
+            text-align: center;
+        }
+
+        .card {
+            background: #fdfdfd;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            border-top: 8px solid #3498db;
+            height: 100%;
+        }
+        
+        .card-green { border-top-color: #2ecc71; }
+        .card-red { border-top-color: #e74c3c; }
+        .card-purple { border-top-color: #9b59b6; }
+
+        .reveal ul {
+            display: block;
+            margin-left: 1em;
+            padding-left: 0;
+            line-height: 1.5;
+        }
+
+        .reveal li {
+            margin-bottom: 30px;
+        }
+
+        .title-slide {
+            padding: 20px !important;
+            border-radius: 20px;
+            background: transparent;
+            margin-top: -80px; /* Pull title up */
+        }
+
+        .image-box {
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            max-width: 100%;
+            max-height: 600px; /* Ensure images don't overflow */
+            object-fit: contain;
+        }
+
+        .table-custom {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .table-custom th, .table-custom td {
+            border: 2px solid #ecf0f1;
+            padding: 20px;
+            text-align: center;
+        }
+        .table-custom th {
+            background-color: #3498db;
+            color: white;
+            font-size: 1.1em;
+        }
+        .table-custom tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="reveal">
+    <div class="slides">
+
+        <!-- Slide 1: Title -->
+        <section>
+            <div class="title-slide text-center">
+                <h2 style="font-size: 1.8em; line-height: 1.2; margin-bottom: 20px; color: #2980b9; font-weight: 800;">
+                    CodeAid: Exploring AI-Assisted Programming Support for Students and Educators in the Classroom
+                </h2>
+                <hr style="width: 80%; border-top: 4px solid #3498db; margin: 30px auto;">
+                
+                <h4 style="color: #2ecc71; font-size: 1.2em; margin-bottom: 60px;">
+                    <i class="fa-solid fa-microchip"></i> ML Lab Project Presentation
+                </h4>
+                
+                <div class="grid-2" style="font-size: 0.9em; text-align: left;">
+                    <!-- Presented By -->
+                    <div class="card" style="padding: 30px; border-top-color: #f39c12; border-radius: 25px;">
+                        <h4 style="color: #f39c12; margin-bottom: 25px; font-size: 1.1em;">Presented By</h4>
+                        <p style="font-weight: 800; font-size: 1.1em; margin: 5px 0;">Md. Sajjad Mahmud Suton</p>
+                        <p style="font-size: 0.8em; color: #7f8c8d; margin-bottom: 30px;">ID: 232002218</p>
+                        
+                        <p style="font-weight: 800; font-size: 1.1em; margin: 5px 0;">Mst. Esha Akter</p>
+                        <p style="font-size: 0.8em; color: #7f8c8d;">ID: 232002202</p>
+                    </div>
+
+                    <!-- Presented To -->
+                    <div class="card" style="padding: 30px; border-top-color: #9b59b6; border-radius: 25px;">
+                        <h4 style="color: #9b59b6; margin-bottom: 25px; font-size: 1.1em;">Presented To</h4>
+                        <p style="font-weight: 800; font-size: 1.1em; margin: 5px 0;">Ms. Shamima Akter</p>
+                        <p style="font-size: 0.85em; color: #7f8c8d; margin-bottom: 5px;">Assistant Professor, Dept of CSE</p>
+                        <p style="font-size: 0.85em; font-weight: 800; color: #2ecc71; margin-top: 30px;">Green University of Bangladesh</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 2: Introduction -->
+        <section>
+            <h2><i class="fa-solid fa-rocket" style="color: #3498db;"></i> Introduction</h2>
+            <div class="flex-row">
+                <div class="content-focus">
+                    <ul>
+                        <li><strong>What is CodeAid?</strong><br> A smart web-based IDE and AI assistant based on the "CodeAid" research paper.</li>
+                        <li><strong>The Core Problem:</strong><br> Regular AI models directly write full code. Students copy-paste and <span class="highlight-red">fail to learn concepts</span>.</li>
+                        <li><strong>The Solution:</strong><br> An AI that acts as a teacher—providing logic and clues, but <strong>refusing to write direct code</strong>.</li>
+                    </ul>
+                </div>
+                <div class="image-side">
+                    <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80" class="image-box" alt="Coding">
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 3: The Original Paper -->
+        <section>
+            <h2><i class="fa-solid fa-file-lines" style="color: #9b59b6;"></i> The Original Paper</h2>
+            <div class="card text-left" style="padding: 50px;">
+                <ul>
+                    <li><strong>Concept:</strong> Restricting LLMs from spoon-feeding code to students.</li>
+                    <li><strong>Approach:</strong> Collected data on how students interact with AI for coding tasks.</li>
+                    <li><strong style="color: #e74c3c; font-size: 1.1em;">Identified Gaps in the Paper:</strong>
+                        <ul style="font-size: 0.9em; margin-top: 25px; color: #555;">
+                            <li>Lacked multi-language execution directly in the browser.</li>
+                            <li>Did not utilize <strong>Machine Learning</strong> to automatically analyze and classify student intents based on their queries.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Slide 4: Our Contributions -->
+        <section>
+            <h2><i class="fa-solid fa-bridge-water" style="color: #2ecc71;"></i> Our Contributions</h2>
+            <p style="font-weight: 600; color: #7f8c8d; text-align: center; margin-bottom: 40px; font-size: 1.2em;">How We Solved the Gaps</p>
+            <div class="grid-2">
+                <div class="card card-green text-left" style="padding: 40px;">
+                    <h4 style="color: #2ecc71; font-size: 1.4em;"><i class="fa-solid fa-code"></i> IDE Enhancement</h4>
+                    <ul style="font-size: 0.9em; margin-top: 30px;">
+                        <li>Built a fully functional, dark-themed web-based IDE.</li>
+                        <li>Added real-time execution for <span class="highlight-blue">C, C++, and Python</span>.</li>
+                        <li>Integrated <strong style="color: #f39c12;">Firebase Firestore</strong> to track student progress and log activities.</li>
+                        <li>Introduced <strong>Seamless Error-to-AI Integration</strong> (One-Click Error Explainer).</li>
+                    </ul>
+                </div>
+                <div class="card card-purple text-left" style="padding: 40px;">
+                    <h4 style="color: #9b59b6; font-size: 1.4em;"><i class="fa-solid fa-brain"></i> ML Integration</h4>
+                    <ul style="font-size: 0.9em; margin-top: 30px;">
+                        <li>Analyzed a vast dataset of student interactions.</li>
+                        <li>Trained <strong>Machine Learning models</strong> to automatically predict student intents from their questions.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 5: Working Mechanism -->
+        <section>
+            <h2><i class="fa-solid fa-gears" style="color: #7f8c8d;"></i> Working Mechanism</h2>
+            <div class="flex-row">
+                <div class="content-focus">
+                    <ol style="line-height: 1.8;">
+                        <li>User selects a language & writes code.</li>
+                        <li>User selects an AI feature.</li>
+                        <li>Frontend sends code + question to Backend.</li>
+                        <li><span class="highlight-blue">Backend injects strict Educational Prompt</span> & calls LLM.</li>
+                        <li>Response streams back in Markdown format.</li>
+                        <li>User clicks "Run Code" &rarr; Backend compiles and executes.</li>
+                    </ol>
+                </div>
+                <div class="image-side">
+                    <img src="https://images.unsplash.com/photo-1516116216624-53e697fedbea?auto=format&fit=crop&w=800&q=80" class="image-box" alt="Mechanism">
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6: Dataset Description (WITH GRAPH) -->
+        <section>
+            <h2><i class="fa-solid fa-database" style="color: #e67e22;"></i> Dataset Description</h2>
+            <div class="flex-row">
+                <div class="content-focus">
+                    <ul>
+                        <li><strong>Dataset:</strong> Log of student queries (~142,000 records).</li>
+                        <li><strong>Features:</strong> User ID, Timestamp, Input Question, Input Code.</li>
+                        <li><strong>Target Label:</strong> Feature Type (Intent mapping).</li>
+                        <li style="color: #3498db;"><strong>Goal:</strong> Train models to predict the intent using NLP.</li>
+                    </ul>
+                </div>
+                <div class="image-side">
+                    <!-- ADDED CLASS DISTRIBUTION GRAPH FROM ML RESULTS -->
+                    <img src="ml/results/class_distribution.png" class="image-box" style="box-shadow: none;" alt="Class Distribution">
+                    <p style="font-size: 0.5em; color: #7f8c8d; margin-top: 10px;">Fig: Class Distribution of Student Intents</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7: ML Results - Comparison Graph -->
+        <section>
+            <h2><i class="fa-solid fa-chart-bar" style="color: #2980b9;"></i> Machine Learning Results</h2>
+            <div class="flex-row">
+                <div class="content-focus">
+                    <ul>
+                        <li>We trained 3 different algorithms on the NLP data.</li>
+                        <li><strong>Linear SVM</strong> outperformed others.</li>
+                        <li><strong>Naive Bayes</strong> had great Precision but lower Recall.</li>
+                        <li><strong>Logistic Regression</strong> provided a balanced baseline.</li>
+                    </ul>
+                </div>
+                <div class="image-side" style="flex: 2;">
+                    <!-- ADDED PERFORMANCE COMPARISON GRAPH FROM ML RESULTS -->
+                    <img src="ml/results/performance_comparison.png" class="image-box" style="box-shadow: none; background: white; padding: 10px;" alt="Performance Comparison">
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8: ML Results - Table -->
+        <section>
+            <h2><i class="fa-solid fa-table" style="color: #2ecc71;"></i> Evaluation Metrics</h2>
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <th>Algorithm</th>
+                        <th>Accuracy</th>
+                        <th>Precision</th>
+                        <th>Recall</th>
+                        <th>F1 Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="font-weight: bold; font-size: 1.1em; color: #27ae60;">Linear SVM</td>
+                        <td style="color: #27ae60; font-weight: bold; font-size: 1.2em;">82.45%</td>
+                        <td>80.78%</td>
+                        <td>71.32%</td>
+                        <td>74.70%</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: bold; font-size: 1.1em; color: #2980b9;">Naive Bayes</td>
+                        <td style="color: #2980b9; font-weight: bold; font-size: 1.2em;">80.88%</td>
+                        <td>87.88%</td>
+                        <td>57.94%</td>
+                        <td>58.58%</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: bold; font-size: 1.1em; color: #8e44ad;">Logistic Regression</td>
+                        <td style="color: #8e44ad; font-weight: bold; font-size: 1.2em;">80.46%</td>
+                        <td>79.86%</td>
+                        <td>60.02%</td>
+                        <td>62.19%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Slide 9: Confusion Matrix (Best Model) -->
+        <section>
+            <h2><i class="fa-solid fa-border-all" style="color: #e74c3c;"></i> Linear SVM: Confusion Matrix</h2>
+            <div class="text-center">
+                <!-- ADDED CONFUSION MATRIX GRAPH FROM ML RESULTS -->
+                <img src="ml/results/cm_linear_svm.png" class="image-box" style="max-height: 700px; box-shadow: none; background: white;" alt="Linear SVM Confusion Matrix">
+                <p style="font-size: 0.6em; color: #7f8c8d; margin-top: 15px;">Confusion Matrix demonstrating strong diagonal predictions for the best performing model.</p>
+            </div>
+        </section>
+
+        <!-- Slide 10: Limitations -->
+        <section>
+            <h2><i class="fa-solid fa-triangle-exclamation" style="color: #e74c3c;"></i> Limitations</h2>
+            <div class="card card-red text-left" style="padding: 60px;">
+                <ul>
+                    <li><strong>API Dependency:</strong> IDE heavily relies on external LLM APIs (like OpenAI) which incur costs.</li>
+                    <li><strong>Prompt Injection:</strong> Smart users might trick the AI into giving direct code by overriding prompts.</li>
+                    <li><strong>Execution Security:</strong> Running user code currently uses basic processes without strict Docker container isolation.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Slide 11: Future Work -->
+        <section>
+            <h2><i class="fa-solid fa-arrow-trend-up" style="color: #3498db;"></i> Future Work</h2>
+            <div class="grid-2">
+                <div class="card text-left">
+                    <h4 style="color: #2980b9; font-size: 1.2em;"><i class="fa-solid fa-server"></i> Infrastructure</h4>
+                    <ul style="font-size: 0.9em; margin-top: 25px;">
+                        <li>Implement <strong>Docker containers</strong> for 100% safe code execution.</li>
+                        <li>Integrate local Open-Source models (like Llama 3) to completely remove API costs.</li>
+                    </ul>
+                </div>
+                <div class="card text-left">
+                    <h4 style="color: #f39c12; font-size: 1.2em;"><i class="fa-solid fa-layer-group"></i> Features</h4>
+                    <ul style="font-size: 0.9em; margin-top: 25px;">
+                        <li>Expand support for Java, JavaScript, and Database Queries (SQL).</li>
+                        <li>Develop a <strong>Teacher Dashboard</strong> to track student progress and common mistakes.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 12: Conclusion -->
+        <section>
+            <div class="title-slide text-center" style="padding: 100px 40px !important;">
+                <h2 style="font-size: 3em; color: #2ecc71; margin-bottom: 20px;">Thank You!</h2>
+                <hr style="width: 40%; border-top: 4px solid #eee; margin: 40px auto;">
+                <h4 style="color: #7f8c8d; font-weight: 300; font-size: 1.5em;">Any Questions?</h4>
+            </div>
+        </section>
+
+    </div>
+</div>
+
+<!-- Reveal.js Scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+<script>
+    Reveal.initialize({
+        width: 1600,
+        height: 1000,
+        margin: 0.04,
+        minScale: 0.2,
+        maxScale: 2.0,
+        controls: true,
+        progress: true,
+        center: true,
+        hash: true,
+        transition: 'slide', /* Changed to a very stylish Zoom transition */
+        backgroundTransition: 'zoom',
+        slideNumber: 'c/t'
+    });
+</script>
+</body>
+</html>

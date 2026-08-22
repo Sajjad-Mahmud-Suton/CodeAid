@@ -1,6 +1,16 @@
 @echo off
 echo Starting CodeAid Project...
 
+echo Checking/Installing Backend Dependencies...
+cd backend
+call npm install
+cd ..
+
+echo Checking/Installing Frontend Dependencies...
+cd frontend
+call npm install
+cd ..
+
 echo Starting Backend...
 start cmd /k "cd backend && npx tsc && node dist/server.js"
 
